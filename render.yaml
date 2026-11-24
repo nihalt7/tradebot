@@ -1,19 +1,24 @@
 services:
+  # Backend FastAPI Service on Render
   - type: web
-    name: tradepulse-backend
+    name: tradebot-backend
     env: python
-    region: oregon
-    plan: free
-    buildCommand: pip install -r backend/requirements.txt
-    startCommand: uvicorn backend.app.main:app --host 0.0.0.0 --port $PORT
+    rootDir: backend
+    plan: starter
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "uvicorn app.main:app --host 0.0.0.0 --port $PORT"
     envVars:
       - key: PYTHON_VERSION
         value: 3.12.0
       - key: MONGODB_URI
         sync: false
       - key: DATABASE_NAME
-        value: tradepulse
-      - key: CORS_ORIGINS
-        value: "*"
+        value: tradebot_db
       - key: SECRET_KEY
         generateValue: true
+      - key: MARKET_DATA_PROVIDER
+        value: yfinance
+      - key: SCANNER_INTERVAL_SECONDS
+        value: "60"
+      - key: DEFAULT_CAPITAL
+        value: "1000000"

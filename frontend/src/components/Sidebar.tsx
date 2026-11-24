@@ -1,106 +1,169 @@
-import React from 'react';
-import { 
-  MessageSquare, 
-  ListFilter, 
-  Radar, 
-  TrendingUp, 
-  TrendingDown, 
-  Zap, 
-  History, 
-  Briefcase, 
-  ShieldAlert, 
-  BarChart2, 
-  Settings,
-  Bot,
-  Search
-} from 'lucide-react';
+"use client";
 
-export type NavTab = 
-  | 'chat' 
-  | 'watchlist' 
-  | 'scanner' 
-  | 'top_buys' 
-  | 'top_sells' 
-  | 'active_signals' 
-  | 'signal_history' 
-  | 'portfolio' 
-  | 'risk' 
-  | 'backtest' 
-  | 'settings';
+import React from "react";
+import {
+  Bot,
+  LayoutDashboard,
+  CandlestickChart,
+  Star,
+  Radar,
+  TrendingUp,
+  TrendingDown,
+  Zap,
+  Briefcase,
+  PlaySquare,
+  ShieldAlert,
+  History,
+  CheckCircle,
+  Settings
+} from "lucide-react";
+
+export type ViewType =
+  | "ai_assistant"
+  | "market_overview"
+  | "tradingview_charts"
+  | "watchlist"
+  | "scanner"
+  | "top_buy"
+  | "top_sell"
+  | "active_opportunities"
+  | "portfolio"
+  | "paper_trading"
+  | "risk_management"
+  | "backtesting"
+  | "signal_history"
+  | "settings";
 
 interface SidebarProps {
-  activeTab: NavTab;
-  setActiveTab: (tab: NavTab) => void;
-  watchlistCount: number;
-  openPositionsCount: number;
-  activeSignalsCount: number;
+  currentView: ViewType;
+  onSelectView: (view: ViewType) => void;
+  counts: {
+    topBuy: number;
+    topSell: number;
+    activeOpps: number;
+    openPositions: number;
+  };
 }
 
-export const Sidebar: React.FC<SidebarProps> = ({
-  activeTab,
-  setActiveTab,
-  watchlistCount,
-  openPositionsCount,
-  activeSignalsCount
-}) => {
-  const navItems = [
-    { id: 'chat' as NavTab, label: 'AI Trading Assistant', icon: MessageSquare, badge: null, color: 'text-emerald-400' },
-    { id: 'watchlist' as NavTab, label: 'My Watchlist (Engine A)', icon: ListFilter, badge: watchlistCount, color: 'text-emerald-400' },
-    { id: 'scanner' as NavTab, label: 'Live Market Scanner (Engine B)', icon: Radar, badge: null, color: 'text-cyan-400' },
-    { id: 'top_buys' as NavTab, label: 'Top 5 BUY Signals', icon: TrendingUp, badge: '5', color: 'text-emerald-400' },
-    { id: 'top_sells' as NavTab, label: 'Top 5 SELL Signals', icon: TrendingDown, badge: '5', color: 'text-rose-400' },
-    { id: 'active_signals' as NavTab, label: 'Active Opportunities', icon: Zap, badge: activeSignalsCount || null, color: 'text-amber-400' },
-    { id: 'portfolio' as NavTab, label: 'Portfolio & Paper Trading', icon: Briefcase, badge: openPositionsCount || null, color: 'text-teal-400' },
-    { id: 'risk' as NavTab, label: 'Risk Management', icon: ShieldAlert, badge: null, color: 'text-amber-400' },
-    { id: 'backtest' as NavTab, label: 'Strategy Backtesting', icon: BarChart2, badge: null, color: 'text-cyan-400' },
-    { id: 'signal_history' as NavTab, label: 'Signal Audit History', icon: History, badge: null, color: 'text-gray-400' },
-    { id: 'settings' as NavTab, label: 'Broker APIs & Settings', icon: Settings, badge: null, color: 'text-gray-400' },
+export default function Sidebar({ currentView, onSelectView, counts }: SidebarProps) {
+  const menuItems = [
+    {
+      id: "ai_assistant" as ViewType,
+      label: "AI Trading Assistant",
+      icon: Bot,
+      highlight: true
+    },
+    {
+      id: "market_overview" as ViewType,
+      label: "Market Overview",
+      icon: LayoutDashboard
+    },
+    {
+      id: "tradingview_charts" as ViewType,
+      label: "TradingView Charts",
+      icon: CandlestickChart
+    },
+    {
+      id: "watchlist" as ViewType,
+      label: "My Watchlist",
+      icon: Star
+    },
+    {
+      id: "scanner" as ViewType,
+      label: "Live NSE Scanner",
+      icon: Radar
+    },
+    {
+      id: "top_buy" as ViewType,
+      label: "Top BUY Signals",
+      icon: TrendingUp,
+      badge: counts.topBuy > 0 ? counts.topBuy : undefined,
+      badgeColor: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30"
+    },
+    {
+      id: "top_sell" as ViewType,
+      label: "Top SELL Signals",
+      icon: TrendingDown,
+      badge: counts.topSell > 0 ? counts.topSell : undefined,
+      badgeColor: "bg-rose-500/20 text-rose-400 border-rose-500/30"
+    },
+    {
+      id: "active_opportunities" as ViewType,
+      label: "Active Opportunities",
+      icon: Zap,
+      badge: counts.activeOpps > 0 ? counts.activeOpps : undefined,
+      badgeColor: "bg-blue-500/20 text-blue-400 border-blue-500/30"
+    },
+    {
+      id: "portfolio" as ViewType,
+      label: "Portfolio",
+      icon: Briefcase
+    },
+    {
+      id: "paper_trading" as ViewType,
+      label: "Paper Trading",
+      icon: PlaySquare,
+      badge: counts.openPositions > 0 ? `${counts.openPositions} Open` : undefined,
+      badgeColor: "bg-amber-500/20 text-amber-400 border-amber-500/30"
+    },
+    {
+      id: "risk_management" as ViewType,
+      label: "Risk Management",
+      icon: ShieldAlert
+    },
+    {
+      id: "backtesting" as ViewType,
+      label: "Backtesting",
+      icon: History
+    },
+    {
+      id: "signal_history" as ViewType,
+      label: "Signal History",
+      icon: CheckCircle
+    },
+    {
+      id: "settings" as ViewType,
+      label: "Settings",
+      icon: Settings
+    }
   ];
 
   return (
-    <aside className="w-80 h-full bg-[#111b21] border-r border-gray-700/50 flex flex-col flex-shrink-0 select-none">
-      {/* WhatsApp-like User Header */}
-      <div className="h-16 bg-[#202c33] px-4 flex items-center justify-between border-b border-gray-700/50 flex-shrink-0">
-        <div className="flex items-center space-x-3">
-          <div className="w-10 h-10 rounded-full bg-emerald-600/30 border border-emerald-500/40 flex items-center justify-center">
-            <Bot className="w-5 h-5 text-emerald-400" />
-          </div>
-          <div>
-            <div className="text-sm font-bold text-white">NSE Quant Studio</div>
-            <div className="text-[11px] text-gray-400">WhatsApp Web UI</div>
-          </div>
-        </div>
-      </div>
-
-      {/* Navigation List */}
-      <div className="flex-1 overflow-y-auto p-2 space-y-1">
-        <div className="text-[10px] font-bold text-gray-500 uppercase tracking-wider px-3 py-1">
-          Trading & Monitoring Engines
-        </div>
-
-        {navItems.map((item) => {
+    <aside className="w-64 bg-[#0E121B] border-r border-[#1E2638] flex flex-col h-[calc(100vh-3.5rem)] select-none shrink-0 overflow-y-auto">
+      <div className="p-3 space-y-1">
+        {menuItems.map((item) => {
           const Icon = item.icon;
-          const isActive = activeTab === item.id;
+          const isActive = currentView === item.id;
 
           return (
             <button
               key={item.id}
-              onClick={() => setActiveTab(item.id)}
-              className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold transition-all duration-150 ${
+              onClick={() => onSelectView(item.id)}
+              className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-medium transition-all ${
                 isActive
-                  ? 'bg-[#202c33] text-white border-l-4 border-emerald-400 shadow-sm'
-                  : 'text-gray-300 hover:bg-[#202c33]/50 hover:text-white'
+                  ? "bg-blue-600/15 text-blue-400 border border-blue-500/30 shadow-sm"
+                  : item.highlight
+                  ? "text-slate-100 hover:bg-[#141A28] border border-blue-500/20 bg-blue-950/20"
+                  : "text-slate-300 hover:bg-[#141A28] hover:text-white"
               }`}
             >
-              <div className="flex items-center space-x-3 truncate">
-                <Icon className={`w-4 h-4 flex-shrink-0 ${item.color}`} />
+              <div className="flex items-center space-x-2.5 truncate">
+                <Icon
+                  className={`w-4 h-4 shrink-0 ${
+                    isActive
+                      ? "text-blue-400"
+                      : item.highlight
+                      ? "text-blue-400"
+                      : "text-slate-400"
+                  }`}
+                />
                 <span className="truncate">{item.label}</span>
               </div>
 
-              {item.badge !== null && (
-                <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold ${
-                  isActive ? 'bg-emerald-500 text-black' : 'bg-gray-700 text-gray-300'
-                }`}>
+              {item.badge !== undefined && (
+                <span
+                  className={`px-1.5 py-0.5 text-[10px] font-bold rounded border ${item.badgeColor}`}
+                >
                   {item.badge}
                 </span>
               )}
@@ -109,14 +172,16 @@ export const Sidebar: React.FC<SidebarProps> = ({
         })}
       </div>
 
-      {/* Footer System Status */}
-      <div className="p-3 bg-[#0c1317] border-t border-gray-800 text-[11px] text-gray-400 flex items-center justify-between flex-shrink-0">
-        <span className="flex items-center">
-          <span className="w-2 h-2 rounded-full bg-emerald-400 mr-1.5 animate-pulse"></span>
-          NSE WebSocket Live
-        </span>
-        <span className="text-gray-500 text-[10px]">v1.0.0 Pro</span>
+      {/* Bottom disclaimer footer */}
+      <div className="mt-auto p-3 border-t border-[#1E2638] bg-[#0A0D15]/80">
+        <div className="flex items-center space-x-2">
+          <div className="w-2 h-2 rounded-full bg-emerald-400"></div>
+          <span className="text-[11px] font-medium text-slate-300">Strict Quantitative Rules</span>
+        </div>
+        <p className="text-[10px] text-slate-500 mt-1 leading-normal">
+          Real NSE data only. Setup score &ge; 70 required. Capital protection first.
+        </p>
       </div>
     </aside>
   );
-};
+}
